@@ -88,9 +88,9 @@ const App: React.FC = () => {
         </form>
       </div>
 
-      <div style={{ marginTop: '30px' }}>
+      <div style={{ marginTop: '20px' }}>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <strong style={{ marginBottom: '20px' }}>Galão: {Gallon}L</strong>
+          <strong style={{ marginBottom: '10px' }}>Galão: {Gallon}L</strong>
 
           {Bottles.map((bottle, index) => (
             <div key={index}>
@@ -98,8 +98,15 @@ const App: React.FC = () => {
             </div>
           ))}
 
-          <strong style={{ marginTop: '10px' }}>Garrafas usadas: {usedBottles}</strong>
-          
+
+          <div style={{ marginTop: '20px', display: "flex", flexDirection: "row" }}>
+            <strong>Garrafas usadas: &nbsp;</strong>
+            {usedBottles.map((usedBottle, index) => (
+              <div key={index}>
+                  <span>{usedBottle}L, &nbsp;</span>
+              </div>          
+            ))}
+          </div>
           <button type="button" onClick={Result} style={{ maxWidth: '200px', marginTop: '20px' }}>RESULTADO</button>
         </div>
       </div>
