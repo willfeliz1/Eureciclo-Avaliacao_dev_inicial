@@ -1,9 +1,5 @@
 import React, { FormEvent, useCallback, useState } from 'react';
 
-// interface IBottle {
-//   quantity: number;
-// }
-
 let total = 0.0;
 let filterLitters: number[];
 
@@ -22,7 +18,7 @@ const App: React.FC = () => {
     return b - a;
   }
 
-  function subtractionDecimal(a: number, b:number) {
+  function subtractionDecimal(a: number, b: number) {
     return (a * 10 - b * 10) / 10;
   }
 
@@ -45,37 +41,34 @@ const App: React.FC = () => {
 
   }, [newGallon]);
 
-
-
   const Result = useCallback(() => {
     let ordenedBottles = Bottles.map(state => state);
 
-    let arrayLitters = [] as number[];
+    let Litters = [] as number[];
 
     ordenedBottles.sort(compareNumbers);
 
     ordenedBottles.reduce((acc, currentValue, currentIndex, array) => {
-
       total = subtractionDecimal(acc, currentValue);
 
-      arrayLitters.push(total);
+      Litters.push(total);
 
       if ((total >= 0) || currentValue > Gallon) {
         usedBottles.push(currentValue);
 
-        arrayLitters.splice(currentIndex-1, 1);
+        Litters.splice(currentIndex - 1, 1);
 
         return subtractionDecimal(acc, currentValue);
-      } else { 
-        filterLitters = arrayLitters.filter(litter => litter !== acc);
+      } else {
+        filterLitters = Litters.filter(litter => litter !== acc);
 
         return acc
-      } 
+      }
     }, Gallon);
 
-    (arrayLitters.length !== 0 && total !== 0) && (setLeftLitters(Math.max.apply(null, filterLitters))); 
+    (Litters.length !== 0 && total !== 0) && (setLeftLitters(Math.max.apply(null, filterLitters)));
 
-    arrayLitters.length !== 0
+    Litters.length !== 0
       ? setUsedBottles([...usedBottles, Math.min.apply(null, ordenedBottles)])
       : setUsedBottles([...usedBottles])
 
@@ -120,11 +113,11 @@ const App: React.FC = () => {
 
           <div style={{ marginTop: '20px', display: "flex", flexDirection: "row" }}>
             <strong>Garrafas usadas: &nbsp;</strong>
-            
+
             {usedBottles.map((usedBottle, index) => (
               <div key={index}>
-                  <span>{usedBottle}L, &nbsp;</span>
-              </div>          
+                <span>{usedBottle}L, &nbsp;</span>
+              </div>
             ))}
 
             <strong>Sobrou: {leftLitters}L</strong>
