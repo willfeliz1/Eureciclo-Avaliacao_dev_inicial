@@ -1,7 +1,7 @@
 import React, { FormEvent, useCallback, useState } from 'react';
 
 let total = 0.0;
-let filterLitters: number[];
+let filterLiters: number[];
 
 const App: React.FC = () => {
   const [Gallon, setGallon] = useState(0);
@@ -12,7 +12,7 @@ const App: React.FC = () => {
 
   const [usedBottles, setUsedBottles] = useState([] as number[]);
 
-  const [leftLitters, setLeftLitters] = useState<Number>(0);
+  const [leftLiters, setLeftLiters] = useState<Number>(0);
 
   function compareNumbers(a: number, b: number) {
     return b - a;
@@ -44,31 +44,31 @@ const App: React.FC = () => {
   const Result = useCallback(() => {
     let ordenedBottles = Bottles.map(state => state);
 
-    let Litters = [] as number[];
+    let Liters = [] as number[];
 
     ordenedBottles.sort(compareNumbers);
 
     ordenedBottles.reduce((acc, currentValue, currentIndex, array) => {
       total = subtractionDecimal(acc, currentValue);
 
-      Litters.push(total);
+      Liters.push(total);
 
       if ((total >= 0) || currentValue > Gallon) {
         usedBottles.push(currentValue);
 
-        Litters.splice(currentIndex - 1, 1);
+        Liters.splice(currentIndex - 1, 1);
 
         return subtractionDecimal(acc, currentValue);
       } else {
-        filterLitters = Litters.filter(litter => litter !== acc);
+        filterLiters = Liters.filter(litter => litter !== acc);
 
         return acc
       }
     }, Gallon);
 
-    (Litters.length !== 0 && total !== 0) && (setLeftLitters(Math.max.apply(null, filterLitters)));
+    (Liters.length !== 0 && total !== 0) && (setLeftLiters(Math.max.apply(null, filterLiters)));
 
-    Litters.length !== 0
+    Liters.length !== 0
       ? setUsedBottles([...usedBottles, Math.min.apply(null, ordenedBottles)])
       : setUsedBottles([...usedBottles])
 
@@ -120,7 +120,7 @@ const App: React.FC = () => {
               </div>
             ))}
 
-            <strong>Sobrou: {leftLitters}L</strong>
+            <strong>Sobrou: {leftLiters}L</strong>
 
           </div>
           <button type="button" onClick={Result} style={{ maxWidth: '200px', marginTop: '20px' }}>RESULTADO</button>
