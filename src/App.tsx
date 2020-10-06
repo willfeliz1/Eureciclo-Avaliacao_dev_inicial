@@ -4,7 +4,9 @@ import React, { FormEvent, useCallback, useState } from 'react';
 //   quantity: number;
 // }
 
-let total = 0;
+let total = 0.0;
+let filterLitters: number[];
+
 
 const App: React.FC = () => {
   const [Gallon, setGallon] = useState(0);
@@ -15,8 +17,14 @@ const App: React.FC = () => {
 
   const [usedBottles, setUsedBottles] = useState([] as number[]);
 
+  const [leftLitters, setLeftLitters] = useState<Number>(0);
+
   function compareNumbers(a: number, b: number) {
     return b - a;
+  }
+
+  function subtractionDecimal(a: number, b:number) {
+    return (a * 10 - b * 10) / 10;
   }
 
   const handleAddBottle = useCallback(async (event: FormEvent<HTMLFormElement>): Promise<void> => {
@@ -37,29 +45,38 @@ const App: React.FC = () => {
 
 
   const Result = useCallback(() => {
-    // let bottlesValueArray = Bottles.map(state => state);
-
     let ordenedBottles = Bottles.map(state => state);
+
+    let arrayLitters = [] as number[];
 
     ordenedBottles.sort(compareNumbers);
 
     ordenedBottles.reduce((acc, currentValue, currentIndex, array) => {
-      total = acc + currentValue;
 
-      if (total > Gallon || currentValue > Gallon) {
-        // array.splice(currentIndex);
+      total = subtractionDecimal(acc, currentValue);
 
-        ordenedBottles.splice(currentIndex);
+      arrayLitters.push(total);
 
-        setUsedBottles([...ordenedBottles]);
+      if ((total >= 0) || currentValue > Gallon) {
+        usedBottles.push(currentValue);
 
-      }
+        arrayLitters.splice(currentIndex-1, 1);
 
-      return acc + currentValue;
+        return subtractionDecimal(acc, currentValue);
+      } else { 
+        filterLitters = arrayLitters.filter(litter => litter !== acc);
 
-    }, 0);
+        return acc
+      } 
+    }, Gallon);
 
-  }, [Bottles, Gallon])
+    (arrayLitters.length !== 0 && total !== 0) && (setLeftLitters(Math.max.apply(null, filterLitters))); 
+
+    arrayLitters.length !== 0
+      ? setUsedBottles([...usedBottles, Math.min.apply(null, ordenedBottles)])
+      : setUsedBottles([...usedBottles])
+
+  }, [Bottles, Gallon, usedBottles])
 
 
   return (
@@ -69,7 +86,6 @@ const App: React.FC = () => {
         <form onSubmit={handleAddGallon} style={{ flexDirection: "column", marginTop: "5px" }} >
           <input
             placeholder="Quantidade de litros"
-            type="number"
             onChange={e => setNewGallon(e.target.value)}
           />
           <button type="submit">Inserir</button>
@@ -101,11 +117,15 @@ const App: React.FC = () => {
 
           <div style={{ marginTop: '20px', display: "flex", flexDirection: "row" }}>
             <strong>Garrafas usadas: &nbsp;</strong>
+            
             {usedBottles.map((usedBottle, index) => (
               <div key={index}>
                   <span>{usedBottle}L, &nbsp;</span>
               </div>          
             ))}
+
+            <strong>Sobrou: {leftLitters}L</strong>
+
           </div>
           <button type="button" onClick={Result} style={{ maxWidth: '200px', marginTop: '20px' }}>RESULTADO</button>
         </div>
