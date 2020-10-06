@@ -7,7 +7,6 @@ import React, { FormEvent, useCallback, useState } from 'react';
 let total = 0.0;
 let filterLitters: number[];
 
-
 const App: React.FC = () => {
   const [Gallon, setGallon] = useState(0);
   const [newGallon, setNewGallon] = useState('');
@@ -26,6 +25,10 @@ const App: React.FC = () => {
   function subtractionDecimal(a: number, b:number) {
     return (a * 10 - b * 10) / 10;
   }
+
+  const handleReset = useCallback(() => {
+    window.location.reload();
+  }, []);
 
   const handleAddBottle = useCallback(async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
@@ -128,6 +131,7 @@ const App: React.FC = () => {
 
           </div>
           <button type="button" onClick={Result} style={{ maxWidth: '200px', marginTop: '20px' }}>RESULTADO</button>
+          <button type="button" onClick={handleReset} style={{ maxWidth: '200px', marginTop: '20px' }}>Limpar</button>
         </div>
       </div>
     </>
